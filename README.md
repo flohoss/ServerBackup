@@ -17,7 +17,9 @@ opt
 
 ## needed environment variables (specify in /etc/environment)
 
+```
 PINGURL="https://healthchecks"
 DOCKERDIR="/opt/docker/"
 BACKUPDIR="/opt/backup/"
 PCLOUDLOCATION="Backups/example/"
+```
