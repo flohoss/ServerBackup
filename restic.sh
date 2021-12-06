@@ -1,11 +1,23 @@
 #!/bin/bash
 
-action=$1
-repo=$2
-option=$3
+printHelper() {
+    printf "\n$1 %-10s $1 ($(date +'%F %T')) $3\n" "$2"
+}
 
-checkSudoRights() {
-    [ "$EUID" -ne 0 ] && printError "This script must be run as root" && exit 1
+printError() {
+    printHelper "🔴" "ERROR" "$1"
+}
+
+printInfo() {
+    printHelper "🟠" "INFO" "$1"
+}
+
+printSuccess() {
+    printHelper "🟢" "SUCCESS" "$1"
+}
+
+printImportant() {
+    printHelper "🔔" "IMPORTANT" "$1"
 }
 
 checkAllEnvironmentVariables() {
@@ -18,6 +30,14 @@ checkAllEnvironmentVariables() {
         printSuccess "All environmet variables are set"
     fi
 }
+
+checkSudoRights() {
+    [ "$EUID" -ne 0 ] && printError "This script must be run as root" && exit 1
+}
+
+action=$1
+repo=$2
+option=$3
 
 checkSudoRights
 checkAllEnvironmentVariables
@@ -39,7 +59,7 @@ case $action in
 	    restic -r rclone:pcloud:"$PCLOUDLOCATION""$repo" restore "$option" --target /tmp/ --password-file /opt/backup/.resticpwd
         ;;
     *)
-        printf "🔔 HOW-TO 🔔\n\n"
+        printImportant "HOW-TO"
         printf "snapshots 	[repo]\n"
         printf "remove 		[repo] 		[snapshot-id]\n"
         printf "keep-last 	[repo] 		[amount]\n"
