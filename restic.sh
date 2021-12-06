@@ -4,6 +4,10 @@ action=$1
 repo=$2
 option=$3
 
+checkSudoRights() {
+    [ "$EUID" -ne 0 ] && printError "This script must be run as root" && exit 1
+}
+
 checkAllEnvironmentVariables() {
     local envError=false
     [ "$PCLOUDLOCATION" == "" ] && envError=true
@@ -15,6 +19,7 @@ checkAllEnvironmentVariables() {
     fi
 }
 
+checkSudoRights
 checkAllEnvironmentVariables
 
 case $action in
