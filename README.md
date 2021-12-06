@@ -1,21 +1,50 @@
-# Backup-script to run on a server with restic, rclone and pcloud
+# Backup-script to run in linux with restic, rclone and pcloud
 
-## folder structure
+! Make sure to install docker-compose globally if you are running the script as root !
+
+This script will go through all the folders in, for example, /opt/docker/ and execute a docker-compose stop command to run a backup to a remote pCloud location. The stop command only happens if the docker folder has been specified in the list to be stopped before backup. If the docker folder is called nextcloud it will enable maintenance mode as long as the backup is running. The restic repository in pCloud will need to be initialized before this script is run. For performance reasons the initialization has been excluded from the daily routine.
+
+Once the script is running without errors, the crontab example can be used to run it every night and create logs in a separate folder.
+
+## example folder structure
 
 ```
-opt
+/opt/
 │
 └─── docker/
-│   └─── proxy/
+│   │
+│   └─── nextcloud/
 │   │   │  docker-compose.yml
+│   │   │  ...
+│   │
 │   └─── gitea/
-│   │   │  docker-compose.yml
+│       │  docker-compose.yml
+│       │  ...
+│   
 └─── backup/
-│   │   backup.sh
-│   │   createLogsFolder.sh
+    │  backup.sh
+    │  createLogsFolder.sh
+    │  ...
+    └─── logs/
+        └─── 2021/
+        │   └─── ...
+        │   └─── 10/
+        │   │   └─── ...
+        │   │   └─── 2021-10-06.txt
+        │   │   └─── ...
+        │   └─── 11/
+        │   └─── ...
+        └─── 2022/
+            └─── ...
+            └─── 10/
+            └─── 11/
+            │   └─── ...
+            │   └─── 2022-11-06.txt
+            │   └─── ...
+            └─── ...
 ```
 
-## needed environment variables (specify in /etc/environment)
+## environment variables used in the script (specify in /etc/environment)
 
 ```
 PINGURL="https://healthchecks"
