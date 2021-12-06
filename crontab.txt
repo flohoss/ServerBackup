@@ -1,2 +1,3 @@
+57 1 * * * cd /opt/backup/ && git pull --no-rebase > /dev/null 2>&1
 58 1 * * * /opt/backup/createLogsFolder.sh > /dev/null 2>&1
-0 2 * * * /opt/backup/backup.sh >> /opt/backup/logs/$(date +\%Y)/$(date +\%m)/$(date +\%Y-\%m-\%d).txt 2>&1
+0 3 * * * /opt/backup/backup.sh >> /opt/backup/logs/$(date +\%Y)/$(date +\%m)/$(date +\%Y-\%m-\%d).txt 2>&1
