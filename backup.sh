@@ -84,7 +84,7 @@ checkNoError() {
 
 resticCopy() {
     printInfo "Restic Start Backup: $folderName"
-    restic -r rclone:pcloud:"$PCLOUDLOCATION""$folderName" backup "$DOCKERDIR""$folderName" --password-file /opt/backup/.resticpwd
+    restic -r rclone:pcloud:"$PCLOUDLOCATION""$folderName" backup "$directory" --password-file /opt/backup/.resticpwd
     checkResticError "$?"
 }
 
