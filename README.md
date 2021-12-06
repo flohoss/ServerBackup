@@ -33,6 +33,7 @@ Once the script is running without errors, the crontab example can be used to ru
     │  backup.sh
     │  createLogsFolder.sh
     │  .resticpwd
+    │  .environment
     │  ...
     └─── logs/
         └─── 2021/
