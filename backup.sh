@@ -17,18 +17,15 @@ printSuccess() {
 }
 
 printImportant() {
-    printHelper "🔵 IMPORTANT" "$1"
-}
-
-checkEnvironmentVariable() {
-    [ "$1" == "" ] && envError=true
+    printHelper "⬛ IMPORTANT" "$1"
 }
 
 checkAllEnvironmentVariables() {
-    checkEnvironmentVariable "$PINGURL" "PINGURL"
-    checkEnvironmentVariable "$DOCKERDIR" "DOCKERDIR"
-    checkEnvironmentVariable "$BACKUPDIR" "BACKUPDIR"
-    checkEnvironmentVariable "$PCLOUDLOCATION" "PCLOUDLOCATION"
+    envError=false
+    [ "$PINGURL" == "" ] && envError=true
+    [ "$DOCKERDIR" == "" ] && envError=true
+    [ "$BACKUPDIR" == "" ] && envError=true
+    [ "$PCLOUDLOCATION" == "" ] && envError=true
     if [ "$envError" = true ]; then
         printError "Some environmet variables are not set"
         exit 1
@@ -160,9 +157,6 @@ goThroughDockerdirectorys() {
         resticCleanup "$folderName"
     done
 }
-
-# Global Variable
-envError=false
 
 # Specify what docker should be stopped before backing them up, seperate with space
 dockerToStop="gitea hedgedoc node-red sharelatex vaultwarden media"
