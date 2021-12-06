@@ -124,7 +124,7 @@ directoryBackup() {
     printImportant "Backing up folder <$folderName>"
     resticCopy
     # only continue each step if the previous step has not caused an error
-    [ "$_returnVar" != "error" ] resticCleanup
+    [ "$_returnVar" != "error" ] && resticCleanup
 }
 
 stopDockerCompose() {
