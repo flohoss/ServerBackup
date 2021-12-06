@@ -123,7 +123,8 @@ directoryBackup() {
     folderName="$(echo $directory | rev | cut -d'/' -f2 | rev)"
     printImportant "Backing up folder <$folderName>"
     resticCopy
-    resticCleanup
+    # only continue each step if the previous step has not caused an error
+    [ "$_returnVar" != "error" ] resticCleanup
 }
 
 stopDockerCompose() {
