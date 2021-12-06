@@ -5,19 +5,19 @@ printHelper() {
 }
 
 printError() {
-    printHelper "🔴 ERROR" "$1"
+    printHelper "🔴 ERROR 🔴" "$1"
 }
 
 printInfo() {
-    printHelper "🟡 INFO" "$1"
+    printHelper "ℹ️ INFO ℹ️" "$1"
 }
 
 printSuccess() {
-    printHelper "🟢 SUCCESS" "$1"
+    printHelper "🟢 SUCCESS 🟢" "$1"
 }
 
 printImportant() {
-    printHelper "⬛ IMPORTANT" "$1"
+    printHelper "🔔 IMPORTANT 🔔" "$1"
 }
 
 checkAllEnvironmentVariables() {
