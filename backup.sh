@@ -121,7 +121,7 @@ printAllImageVersions() {
 directoryBackup() {
     directory="$1"
     folderName="$(echo $directory | rev | cut -d'/' -f2 | rev)"
-    printImportant "Backing up $folderName"
+    printImportant "Backing up folder <$folderName>"
     resticCopy
     resticCleanup
 }
