@@ -63,11 +63,14 @@ checkResticError() {
     if [ "$1" -eq 1 ]; then
         curl -sS --data-raw "restic fatal error" "$PINGURL"/fail
         printError "Restic fatal"
+        _returnVar="error"
     elif [ "$1" -eq 2 ]; then
         curl -sS --data-raw "restic remaining files" "$PINGURL"/fail
         printError "Restic remaining files"
+        _returnVar="error"
     else
         printSuccess "Restic operation complete"
+        _returnVar="success"
     fi
 }
 
@@ -75,10 +78,10 @@ checkNoError() {
     if [ "$1" -ne 0 ]; then
         curl -sS --data-raw "$2 error" "$PINGURL"/fail
         printError "$2"
-        functionReturn="error"
+        _returnVar="error"
     else
         printSuccess "$2"
-        functionReturn=""
+        _returnVar="success"
     fi
 }
 
@@ -166,11 +169,17 @@ goThroughDockerDirectorys() {
         folderName="$(echo $directory | rev | cut -d'/' -f2 | rev)"
         printImportant "Backing up $folderName"
         chooseForegoingAction
-        resticCopy
-        chooseSubsequentAction
-        resticCleanup
+        # only continue each step if the previous step has not caused an error
+        [ "$_returnVar" != "error" ] && resticCopy
+        [ "$_returnVar" != "error" ] && chooseSubsequentAction
+        [ "$_returnVar" != "error" ] && resticCleanup
+        # reset returnVar for next run
+        _returnVar=""
     done
 }
+
+# Global return variable
+_returnVar=""
 
 # Specify what docker should be stopped before backing them up, seperate with space
 dockerToStop="gitea hedgedoc sharelatex vaultwarden media"
