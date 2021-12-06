@@ -1,23 +1,23 @@
 #!/bin/bash
 
-printHelper() {    
-    printf "\n$1: ($(date +%H:%M:%S)) $2\n"
+printHelper() {
+    printf "\n$1 %-10s $1 ($(date +'%F %T')) $3\n" "$2"
 }
 
 printError() {
-    printHelper "🔴 ERROR 🔴" "$1"
+    printHelper "🔴" "ERROR" "$1"
 }
 
 printInfo() {
-    printHelper "ℹ️ INFO ℹ️" "$1"
+    printHelper "🟠" "INFO" "$1"
 }
 
 printSuccess() {
-    printHelper "🟢 SUCCESS 🟢" "$1"
+    printHelper "🟢" "SUCCESS" "$1"
 }
 
 printImportant() {
-    printHelper "🔔 IMPORTANT 🔔" "$1"
+    printHelper "🔔" "IMPORTANT" "$1"
 }
 
 checkAllEnvironmentVariables() {
@@ -86,19 +86,19 @@ checkNoError() {
 }
 
 resticCopy() {
-    printInfo "Restic Start Backup: $folderName"
+    printInfo "Restic Backup of folder <$folderName>"
     restic -r rclone:pcloud:"$PCLOUDLOCATION""$folderName" backup "$directory" --password-file /opt/backup/.resticpwd
     checkResticError "$?"
 }
 
 resticCleanup() {
-    printInfo "Restic Start Cleanup: $folderName"
+    printInfo "Restic Cleanup of folder <$folderName>"
     restic -r rclone:pcloud:"$PCLOUDLOCATION""$folderName" forget --keep-daily 7 --keep-weekly 5 --keep-monthly 12 --keep-yearly 75 --prune --password-file /opt/backup/.resticpwd
     checkResticError "$?"
 }
 
 resticCacheCleanup() {
-    restic cache --cleanup
+    restic cache --cleanup > /dev/null
     checkNoError "$?" "restic cache cleanup"
 }
 
@@ -122,6 +122,7 @@ printAllImageVersions() {
 directoryBackup() {
     directory="$1"
     folderName="$(echo $directory | rev | cut -d'/' -f2 | rev)"
+    printImportant "Backing up $folderName"
     resticCopy
     resticCleanup
 }
@@ -129,7 +130,6 @@ directoryBackup() {
 stopDockerCompose() {
     cd "$directory" && docker compose stop
     checkNoError "$?" "docker compose $folderName stop"
-    if [ functionReturn != "" ]
 }
 
 startDockerCompose() {
@@ -138,12 +138,12 @@ startDockerCompose() {
 }
 
 turnOnNextcloudMaintenanceMode() {
-    docker exec nextcloud occ maintenance:mode --on
+    docker exec nextcloud occ maintenance:mode --on > /dev/null
     checkNoError "$?" "nextcloud maintenance mode on"
 }
 
 turnOffNextcloudMaintenanceMode() {
-    docker exec nextcloud occ maintenance:mode --off
+    docker exec nextcloud occ maintenance:mode --off > /dev/null
     checkNoError "$?" "nextcloud maintenance mode off"
 }
 
@@ -167,7 +167,7 @@ goThroughDockerDirectorys() {
     for directory in $DOCKERDIR*/
     do
         folderName="$(echo $directory | rev | cut -d'/' -f2 | rev)"
-        printImportant "Backing up $folderName"
+        printImportant "Backing up folder <$folderName>"
         chooseForegoingAction
         # only continue each step if the previous step has not caused an error
         [ "$_returnVar" != "error" ] && resticCopy
