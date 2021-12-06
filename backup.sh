@@ -175,14 +175,14 @@ goThroughDockerDirectorys() {
 # Specify what docker should be stopped before backing them up, seperate with space
 dockerToStop="gitea hedgedoc node-red sharelatex vaultwarden media"
 
-# Start of the program
+# Start of the sequence
 checkSudoRights
 checkAllEnvironmentVariables
 healthStart
 resticCacheCleanup
 backupCurrentCrontab
 printAllImageVersions
-goThroughDockerdirectorys
+goThroughDockerDirectorys
 directoryBackup "backup" "/opt/"
 healthFinish
 backupLogs
