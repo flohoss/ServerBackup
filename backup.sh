@@ -21,7 +21,7 @@ printImportant() {
 }
 
 checkAllEnvironmentVariables() {
-    envError=false
+    local envError=false
     [ "$PINGURL" == "" ] && envError=true
     [ "$DOCKERDIR" == "" ] && envError=true
     [ "$BACKUPDIR" == "" ] && envError=true
@@ -50,11 +50,13 @@ backupLogs() {
 healthStart() {
     printInfo "Sending START ping to healthchecks"
     curl -sS -o /dev/null "$PINGURL"/start
+    checkNoError "$?" "start ping"
 }
 
 healthFinish() {
     printInfo "Sending STOP ping to healthchecks"
     curl -sS -o /dev/null "$PINGURL"
+    checkNoError "$?" "stop ping"
 }
 
 checkResticError() {
@@ -73,20 +75,22 @@ checkNoError() {
     if [ "$1" -ne 0 ]; then
         curl -sS --data-raw "$2 error" "$PINGURL"/fail
         printError "$2"
+        functionReturn="error"
     else
         printSuccess "$2"
+        functionReturn=""
     fi
 }
 
 resticCopy() {
-    printInfo "Restic Start Backup: $1"
-    restic -r rclone:pcloud:"$PCLOUDLOCATION""$1" backup "$2""$1" --password-file /opt/backup/.resticpwd
+    printInfo "Restic Start Backup: $folderName"
+    restic -r rclone:pcloud:"$PCLOUDLOCATION""$folderName" backup "$DOCKERDIR""$folderName" --password-file /opt/backup/.resticpwd
     checkResticError "$?"
 }
 
 resticCleanup() {
-    printInfo "Restic Start Cleanup: $1"
-    restic -r rclone:pcloud:"$PCLOUDLOCATION""$1" forget --keep-daily 7 --keep-weekly 5 --keep-monthly 12 --keep-yearly 75 --prune --password-file /opt/backup/.resticpwd
+    printInfo "Restic Start Cleanup: $folderName"
+    restic -r rclone:pcloud:"$PCLOUDLOCATION""$folderName" forget --keep-daily 7 --keep-weekly 5 --keep-monthly 12 --keep-yearly 75 --prune --password-file /opt/backup/.resticpwd
     checkResticError "$?"
 }
 
@@ -113,25 +117,21 @@ printAllImageVersions() {
 }
 
 directoryBackup() {
-    resticCopy "$1" "$2"
-    resticCleanup "$1"
-}
-
-nextcloudBackup() {
-    docker exec nextcloud occ maintenance:mode --on
-    resticCopy "$1" "$2" "$3"
-    resticCleanup "$1" "$2"
-    docker exec nextcloud occ maintenance:mode --off
+    directory="$1"
+    folderName="$(echo $directory | rev | cut -d'/' -f2 | rev)"
+    resticCopy
+    resticCleanup
 }
 
 stopDockerCompose() {
-    cd "$1" && docker-compose stop
-    checkNoError "$?" "docker-compose $2 stop"
+    cd "$directory" && docker compose stop
+    checkNoError "$?" "docker compose $folderName stop"
+    if [ functionReturn != "" ]
 }
 
 startDockerCompose() {
-    cd "$1" && test -r docker-compose.yml && docker-compose up -d
-    checkNoError "$?" "docker-compose $2 start"
+    cd "$directory" && docker compose up -d
+    checkNoError "$?" "docker compose $folderName start"
 }
 
 turnOnNextcloudMaintenanceMode() {
@@ -145,17 +145,17 @@ turnOffNextcloudMaintenanceMode() {
 }
 
 chooseForegoingAction() {
-    if echo $dockerToStop | grep -w $1 > /dev/null; then
-        stopDockerCompose "$2" "$1"
-    elif [ "$1" == "nextcloud" ]; then
+    if echo $dockerToStop | grep -w $folderName > /dev/null; then
+        stopDockerCompose
+    elif [ "$folderName" == "nextcloud" ]; then
         turnOnNextcloudMaintenanceMode
     fi
 }
 
 chooseSubsequentAction() {
-    if echo $dockerToStop | grep -w $1 > /dev/null; then
-        startDockerCompose "$2" "$1"
-    elif [ "$1" == "nextcloud" ]; then
+    if echo $dockerToStop | grep -w $folderName > /dev/null; then
+        startDockerCompose
+    elif [ "$folderName" == "nextcloud" ]; then
         turnOffNextcloudMaintenanceMode
     fi
 }
@@ -165,10 +165,10 @@ goThroughDockerDirectorys() {
     do
         folderName="$(echo $directory | rev | cut -d'/' -f2 | rev)"
         printImportant "Backing up $folderName"
-        chooseForegoingAction "$folderName" "$directory"
-        resticCopy "$folderName" "$DOCKERDIR"
-        chooseSubsequentAction "$folderName" "$directory"
-        resticCleanup "$folderName"
+        chooseForegoingAction
+        resticCopy
+        chooseSubsequentAction
+        resticCleanup
     done
 }
 
@@ -183,6 +183,6 @@ resticCacheCleanup
 backupCurrentCrontab
 printAllImageVersions
 goThroughDockerDirectorys
-directoryBackup "backup" "/opt/"
+directoryBackup "/opt/backup/"
 healthFinish
 backupLogs
