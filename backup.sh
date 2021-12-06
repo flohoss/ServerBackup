@@ -173,7 +173,7 @@ goThroughDockerDirectorys() {
 }
 
 # Specify what docker should be stopped before backing them up, seperate with space
-dockerToStop="gitea hedgedoc node-red sharelatex vaultwarden media"
+dockerToStop="gitea hedgedoc sharelatex vaultwarden media"
 
 # Start of the sequence
 checkSudoRights
