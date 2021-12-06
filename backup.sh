@@ -39,7 +39,7 @@ checkSudoRights() {
 }
 
 backupCurrentCrontab() {
-    crontab -l > "$BACKUPDIR"currentCrontabBackup.txt
+    crontab -l >"$BACKUPDIR"currentCrontabBackup.txt
     checkNoError "$?" "contab backup"
 }
 
@@ -98,14 +98,14 @@ resticCleanup() {
 }
 
 resticCacheCleanup() {
-    restic cache --cleanup > /dev/null
+    restic cache --cleanup >/dev/null
     checkNoError "$?" "restic cache cleanup"
 }
 
 getImageVersion() {
     printf "%s:" "$1"
     if [ "$(docker inspect -f '{{ index .Config.Labels "org.opencontainers.image.authors" }}' "$1")" = "linuxserver.io" ]; then
-    	docker inspect -f '{{ index .Config.Labels "build_version" }}' "$1"
+        docker inspect -f '{{ index .Config.Labels "build_version" }}' "$1"
     else
         docker inspect --format='{{.Config.Image}}' "$1"
     fi
@@ -113,9 +113,8 @@ getImageVersion() {
 
 printAllImageVersions() {
     printInfo "Print docker container versions"
-    for Docker in $(docker ps --format '{{.Names}}')
-    do
-      getImageVersion "$Docker"
+    for Docker in $(docker ps --format '{{.Names}}'); do
+        getImageVersion "$Docker"
     done
 }
 
@@ -138,17 +137,17 @@ startDockerCompose() {
 }
 
 turnOnNextcloudMaintenanceMode() {
-    docker exec nextcloud occ maintenance:mode --on > /dev/null
+    docker exec nextcloud occ maintenance:mode --on >/dev/null
     checkNoError "$?" "nextcloud maintenance mode on"
 }
 
 turnOffNextcloudMaintenanceMode() {
-    docker exec nextcloud occ maintenance:mode --off > /dev/null
+    docker exec nextcloud occ maintenance:mode --off >/dev/null
     checkNoError "$?" "nextcloud maintenance mode off"
 }
 
 chooseForegoingAction() {
-    if echo $dockerToStop | grep -w $folderName > /dev/null; then
+    if echo $dockerToStop | grep -w $folderName >/dev/null; then
         stopDockerCompose
     elif [ "$folderName" == "nextcloud" ]; then
         turnOnNextcloudMaintenanceMode
@@ -156,7 +155,7 @@ chooseForegoingAction() {
 }
 
 chooseSubsequentAction() {
-    if echo $dockerToStop | grep -w $folderName > /dev/null; then
+    if echo $dockerToStop | grep -w $folderName >/dev/null; then
         startDockerCompose
     elif [ "$folderName" == "nextcloud" ]; then
         turnOffNextcloudMaintenanceMode
@@ -164,8 +163,7 @@ chooseSubsequentAction() {
 }
 
 goThroughDockerDirectorys() {
-    for directory in $DOCKERDIR*/
-    do
+    for directory in $DOCKERDIR*/; do
         folderName="$(echo $directory | rev | cut -d'/' -f2 | rev)"
         printImportant "Backing up folder <$folderName>"
         chooseForegoingAction
