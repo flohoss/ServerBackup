@@ -134,26 +134,40 @@ startDockerCompose() {
     checkNoError "$?" "docker-compose $2 start"
 }
 
-goThroughDockerdirectorys() {
+turnOnNextcloudMaintenanceMode() {
+    docker exec nextcloud occ maintenance:mode --on
+    checkNoError "$?" "nextcloud maintenance mode on"
+}
+
+turnOffNextcloudMaintenanceMode() {
+    docker exec nextcloud occ maintenance:mode --off
+    checkNoError "$?" "nextcloud maintenance mode off"
+}
+
+chooseForegoingAction() {
+    if echo $dockerToStop | grep -w $1 > /dev/null; then
+        stopDockerCompose "$2" "$1"
+    elif [ "$1" == "nextcloud" ]; then
+        turnOnNextcloudMaintenanceMode
+    fi
+}
+
+chooseSubsequentAction() {
+    if echo $dockerToStop | grep -w $1 > /dev/null; then
+        startDockerCompose "$2" "$1"
+    elif [ "$1" == "nextcloud" ]; then
+        turnOffNextcloudMaintenanceMode
+    fi
+}
+
+goThroughDockerDirectorys() {
     for directory in $DOCKERDIR*/
     do
         folderName="$(echo $directory | rev | cut -d'/' -f2 | rev)"
         printImportant "Backing up $folderName"
-
-        if echo $dockerToStop | grep -w $folderName > /dev/null; then
-            stopDockerCompose "$directory" "$folderName"
-        elif [ "folderName" == "nextcloud" ]; then
-            docker exec nextcloud occ maintenance:mode --on
-        fi
-
+        chooseForegoingAction "$folderName" "$directory"
         resticCopy "$folderName" "$DOCKERDIR"
-
-        if echo $dockerToStop | grep -w $folderName > /dev/null; then
-            startDockerCompose "$directory" "$folderName"
-        elif [ "folderName" == "nextcloud" ]; then
-            docker exec nextcloud occ maintenance:mode --off
-        fi
-        
+        chooseSubsequentAction "$folderName" "$directory"
         resticCleanup "$folderName"
     done
 }
