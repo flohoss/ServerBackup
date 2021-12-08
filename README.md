@@ -1,3 +1,8 @@
+![](https://img.shields.io/badge/Basics-Shell-informational?style=for-the-badge&logo=gnubash&color=4EAA25)
+![](https://img.shields.io/badge/OS-Debian-informational?style=for-the-badge&logo=debian&color=A81D33)
+![](https://img.shields.io/badge/Tech-Docker-informational?style=for-the-badge&logo=docker&color=2496ED)
+![](https://img.shields.io/badge/Hoster-Hetzner-informational?style=for-the-badge&logo=hetzner&color=D50C2D)
+
 # Backup-script to run in linux with restic, rclone and pcloud
 
 Make sure to install docker compose V2 globally if you are running the script as root:
