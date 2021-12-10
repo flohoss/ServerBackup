@@ -133,7 +133,7 @@ stopDockerCompose() {
 }
 
 startDockerCompose() {
-    cd "$directory" && docker compose up -d
+    cd "$directory" && docker compose start
     checkNoError "$?" "docker compose $folderName start"
 }
 
