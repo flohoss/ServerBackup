@@ -86,13 +86,13 @@ checkNoError() {
 }
 
 resticCopy() {
-    printInfo "Restic Backup of folder <$folderName>"
-    restic -r rclone:pcloud:"$PCLOUDLOCATION""$folderName" backup "$directory" --password-file /opt/backup/.resticpwd
+    printInfo "Restic Backup of <$folderName>"
+    restic -r rclone:pcloud:"$PCLOUDLOCATION""$folderName" backup "$location" --password-file /opt/backup/.resticpwd
     checkResticError "$?"
 }
 
 resticCleanup() {
-    printInfo "Restic Cleanup of folder <$folderName>"
+    printInfo "Restic Cleanup of <$folderName>"
     restic -r rclone:pcloud:"$PCLOUDLOCATION""$folderName" forget --keep-daily 7 --keep-weekly 5 --keep-monthly 12 --keep-yearly 75 --prune --password-file /opt/backup/.resticpwd
     checkResticError "$?"
 }
@@ -119,21 +119,30 @@ printAllImageVersions() {
 }
 
 directoryBackup() {
-    directory="$1"
-    folderName="$(echo $directory | rev | cut -d'/' -f2 | rev)"
-    printImportant "Backing up folder <$folderName>"
+    location="$1"
+    folderName="$(echo $location | rev | cut -d'/' -f2 | rev)"
+    printImportant "Backing up <$location>"
+    resticCopy
+    # only continue each step if the previous step has not caused an error
+    [ "$_returnVar" != "error" ] && resticCleanup
+}
+
+teleportConfigBackup() {
+    location="$1"
+    folderName="$(echo $location | rev | cut -d'/' -f2 | rev | cut -d'.' -f1)"
+    printImportant "Backing up <$location>"
     resticCopy
     # only continue each step if the previous step has not caused an error
     [ "$_returnVar" != "error" ] && resticCleanup
 }
 
 stopDockerCompose() {
-    cd "$directory" && docker compose stop
+    cd "$location" && docker compose stop
     checkNoError "$?" "docker compose $folderName stop"
 }
 
 startDockerCompose() {
-    cd "$directory" && docker compose start
+    cd "$location" && docker compose start
     checkNoError "$?" "docker compose $folderName start"
 }
 
@@ -164,9 +173,9 @@ chooseSubsequentAction() {
 }
 
 goThroughDockerDirectorys() {
-    for directory in $DOCKERDIR*/; do
-        folderName="$(echo $directory | rev | cut -d'/' -f2 | rev)"
-        printImportant "Backing up folder <$folderName>"
+    for location in $DOCKERDIR*/; do
+        folderName="$(echo $location | rev | cut -d'/' -f2 | rev)"
+        printImportant "Backing up <$location>"
         chooseForegoingAction
         # only continue each step if the previous step has not caused an error
         [ "$_returnVar" != "error" ] && resticCopy
@@ -192,5 +201,6 @@ backupCurrentCrontab
 printAllImageVersions
 goThroughDockerDirectorys
 directoryBackup "/opt/backup/"
+teleportConfigBackup "/etc/teleport.yaml"
 healthFinish
 backupLogs
