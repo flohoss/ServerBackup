@@ -129,7 +129,7 @@ directoryBackup() {
 
 teleportConfigBackup() {
     location="$1"
-    folderName="$(echo $location | rev | cut -d'/' -f2 | rev | cut -d'.' -f1)"
+    folderName="$(echo $location | rev | cut -d'/' -f1 | rev | cut -d'.' -f1)"
     printImportant "Backing up <$location>"
     resticCopy
     # only continue each step if the previous step has not caused an error
