@@ -1,7 +1,7 @@
 #!/bin/bash
 
 printHelper() {
-    printf "\n$1 %-10s $1 ($(date +'%F %T')) $3\n" "$2"
+    printf "\n$1 ($(date +'%F %T')) %-10s: $3\n" "$2"
 }
 
 printError() {
@@ -9,7 +9,7 @@ printError() {
 }
 
 printInfo() {
-    printHelper "🟠" "INFO" "$1"
+    printHelper "🔵" "INFO" "$1"
 }
 
 printSuccess() {
@@ -17,7 +17,7 @@ printSuccess() {
 }
 
 printImportant() {
-    printHelper "🔔" "IMPORTANT" "$1"
+    printHelper "🔶" "IMPORTANT" "$1"
 }
 
 checkAllEnvironmentVariables() {
@@ -127,15 +127,6 @@ directoryBackup() {
     [ "$_returnVar" != "error" ] && resticCleanup
 }
 
-teleportConfigBackup() {
-    location="$1"
-    folderName="$(echo $location | rev | cut -d'/' -f1 | rev | cut -d'.' -f1)"
-    printImportant "Backing up <$location>"
-    resticCopy
-    # only continue each step if the previous step has not caused an error
-    [ "$_returnVar" != "error" ] && resticCleanup
-}
-
 stopDockerCompose() {
     cd "$location" && docker compose stop
     checkNoError "$?" "docker compose $folderName stop"
@@ -201,6 +192,5 @@ backupCurrentCrontab
 printAllImageVersions
 goThroughDockerDirectorys
 directoryBackup "/opt/backup/"
-teleportConfigBackup "/etc/teleport.yaml"
 healthFinish
 backupLogs
