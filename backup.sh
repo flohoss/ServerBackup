@@ -92,8 +92,15 @@ resticInit() {
     checkResticError "$?"
 }
 
+resticCheckIfRepoExists() {
+    restic snapshots >/dev/null
+    if [ "$?" -ne 0 ]; then
+        resticInit
+    fi
+}
+
 resticCopy() {
-    resticInit
+    resticCheckIfRepoExists
     printInfo "Restic Backup of <$folderName>"
     restic backup "$location"
     checkResticError "$?"
