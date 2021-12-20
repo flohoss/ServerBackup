@@ -49,15 +49,8 @@ setEnvironment() {
     checkNoError "$?" "Set environment"
 }
 
-createLogFolderStructure() {
-    printImportant "Create log folder structure"
-    cd /opt/backup/ && mkdir "$backupParentDir"logs/$(date +\%Y)/$(date +\%m)/ -p
-    checkNoError "$?" "Create log folder"
-}
-
 checkSudoRights
 
 pullGithubRepo
 setCrontab
 setEnvironment
-createLogFolderStructure
