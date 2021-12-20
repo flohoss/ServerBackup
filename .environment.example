@@ -1,6 +1,4 @@
-HEALTHCHECKURL="https://health.fhoss.de/ping/"
-HEALTCHECKPINGID="<health_check_ping_id>"
-PINGURL="$HEALTHCHECKURL$HEALTCHECKPINGID"
+PINGURL="https://health.fhoss.de/ping/<health_check_ping_id>"
 DOCKERDIR="/opt/docker/"
 BACKUPDIR="/opt/backup/"
 PCLOUDLOCATION="Backups/bmw/"

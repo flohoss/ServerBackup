@@ -164,7 +164,7 @@ initScriptEnv() {
     location="$1"
     folderName="$(echo $location | rev | cut -d'/' -f2 | rev)"
     printImportant "Backing up <$location>"
-    RESTIC_REPOSITORY="rclone:pcloud/Backups/$folderName"
+    export RESTIC_REPOSITORY="rclone:pcloud/Backups/$folderName"
 }
 
 directoryBackup() {
