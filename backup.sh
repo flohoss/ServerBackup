@@ -181,7 +181,7 @@ resetReturnVar() {
 
 goThroughDockerDirectorys() {
     for location in $DOCKERDIR*/; do
-        initScriptEnv "$1"
+        initScriptEnv "$location"
         chooseForegoingAction
         # only continue each step if the previous step has not caused an error
         [ "$_returnVar" != "error" ] && resticCopy
