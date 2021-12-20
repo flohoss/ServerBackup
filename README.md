@@ -15,7 +15,7 @@ chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
 
 A working rclone config file is needed. Feel free to change the backup function to your favoured backup command.
 
-This script will go through all the folders in, for example, /opt/docker/ and execute a docker-compose stop command to run a backup to a remote pCloud location. The stop command only happens if the docker folder has been specified in the list to be stopped before backup. If the docker folder is called nextcloud it will enable maintenance mode as long as the backup is running. The restic repository in pCloud will need to be initialized before this script is run. For performance reasons the initialization has been excluded from the daily routine.
+This script will go through all the folders in, for example, /opt/docker/ and execute a docker-compose stop command to run a backup to a remote pCloud location. The stop command only happens if the docker folder has been specified in the list to be stopped before backup. If the docker folder is called nextcloud it will enable maintenance mode as long as the backup is running. The restic repository in pCloud will be initialized before every backup run.
 
 Once the script is running without errors, the crontab example can be used to run it every night and create logs in a separate folder.
 
@@ -35,10 +35,12 @@ Once the script is running without errors, the crontab example can be used to ru
 │       │  ...
 │   
 └─── backup/
-    │  backup.sh
-    │  createLogsFolder.sh
-    │  .resticpwd
-    │  .environment
+    │  -rwxr-xr-x root:root backup.sh
+    │  -rw-r--r-- root:root crontab.txt
+    │  -rw------- root:root .environment
+    │  -rwxr-xr-x root:root prepareBackup.sh
+    │  -rw------- root:root .resticpwd
+    │  -rwxr-xr-x root:root restic.sh
     │  ...
     └─── logs/
         └─── 2021/
