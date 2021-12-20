@@ -60,21 +60,6 @@ healthFinish() {
     checkNoError "$?" "stop ping"
 }
 
-checkResticError() {
-    if [ "$1" -eq 1 ]; then
-        curl -sS --data-raw "restic fatal error" "$PINGURL"/fail
-        printError "Restic fatal"
-        _returnVar="error"
-    elif [ "$1" -eq 2 ]; then
-        curl -sS --data-raw "restic remaining files" "$PINGURL"/fail
-        printError "Restic remaining files"
-        _returnVar="error"
-    else
-        printSuccess "Restic operation complete"
-        _returnVar="success"
-    fi
-}
-
 checkNoError() {
     if [ "$1" -ne 0 ]; then
         curl -sS --data-raw "$2 error" "$PINGURL"/fail
@@ -89,7 +74,7 @@ checkNoError() {
 resticInit() {
     printInfo "Preparing a new repository of <$folderName>"
     restic init
-    checkResticError "$?"
+    checkNoError "$?" "restic prepare"
 }
 
 resticCheckIfRepoExists() {
@@ -103,13 +88,13 @@ resticCopy() {
     resticCheckIfRepoExists
     printInfo "Restic Backup of <$folderName>"
     restic backup "$location"
-    checkResticError "$?"
+    checkNoError "$?" "restic backup"
 }
 
 resticCleanup() {
     printInfo "Restic Cleanup of <$folderName>"
     restic forget --keep-within-daily 7d --keep-within-weekly 1m --keep-within-monthly 1y --keep-within-yearly 75y prune
-    checkResticError "$?"
+    checkNoError "$?" "restic cleanup"
 }
 
 resticCacheCleanup() {
