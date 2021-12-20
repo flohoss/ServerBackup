@@ -45,7 +45,19 @@ backupCurrentCrontab() {
 }
 
 backupLogs() {
+    # No stdout print because file is backing up
     rclone sync "$BACKUPDIR"/logs/ pcloud:"$PCLOUDLOCATION"logs
+}
+
+backupMediaFolderIfExternalExisting() {
+    externalFolder="/media/external/media"
+    localMediaFolder="/home/flohoss/media"
+    if [[ -d /media/external/ ]]
+    then
+        printImportant "Backup media folder"
+        rclone sync "$localMediaFolder" "$externalFolder" -P
+        checkNoError "$?" "Backup media folder"
+    fi
 }
 
 healthStart() {
@@ -200,5 +212,6 @@ backupCurrentCrontab
 printAllImageVersions
 goThroughDockerDirectorys
 directoryBackup "/opt/backup/"
+backupMediaFolderIfExternalExisting
 healthFinish
 backupLogs
