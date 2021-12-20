@@ -62,7 +62,7 @@ healthFinish() {
 
 checkNoError() {
     if [ "$1" -ne 0 ]; then
-        curl -sS --data-raw "$2 error" "$PINGURL"/fail
+        curl -sS --data-raw "$2" "$PINGURL"/fail
         printError "$2"
         _returnVar="error"
     else
