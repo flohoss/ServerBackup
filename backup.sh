@@ -92,6 +92,7 @@ resticInit() {
 }
 
 resticCopy() {
+    resticInit
     printInfo "Restic Backup of <$folderName>"
     restic backup "$location"
     checkResticError "$?"
