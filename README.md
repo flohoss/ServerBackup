@@ -61,11 +61,14 @@ Once the script is running without errors, the crontab example can be used to ru
             └─── ...
 ```
 
-## environment variables used in the script (specify in /etc/environment)
+## environment variables used in the script
+
+```prepareBackup.sh``` will copy ```.environment``` in ```/etc/environment```
 
 ```bash
-PINGURL="https://healthchecks"
+PINGURL="https://health.fhoss.de/ping/<health_check_ping_id>"
 DOCKERDIR="/opt/docker/"
 BACKUPDIR="/opt/backup/"
-PCLOUDLOCATION="Backups/example/"
+PCLOUDLOCATION="Backups/bmw/"
+RESTIC_PASSWORD_FILE="/opt/backup/.resticpwd"
 ```
