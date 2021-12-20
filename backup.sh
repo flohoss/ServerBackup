@@ -50,12 +50,12 @@ backupLogs() {
 }
 
 backupMediaFolderIfExternalExisting() {
-    externalFolder="/media/external/media"
-    localMediaFolder="/home/flohoss/media"
+    externalFolder="/media/external/media/"
+    localMediaFolder="/home/flohoss/media/"
     if [[ -d "$externalFolder" ]]
     then
         printImportant "Backup media folder"
-        rclone sync "$localMediaFolder" "$externalFolder" -P
+        rclone sync "$localMediaFolder" "$externalFolder"
         checkNoError "$?" "Backup media folder"
     fi
 }
