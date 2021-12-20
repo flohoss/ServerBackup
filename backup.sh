@@ -85,15 +85,21 @@ checkNoError() {
     fi
 }
 
+resticInit() {
+    printInfo "Preparing a new repository of <$folderName>"
+    restic init
+    checkResticError "$?"
+}
+
 resticCopy() {
     printInfo "Restic Backup of <$folderName>"
-    restic -r rclone:pcloud:"$PCLOUDLOCATION""$folderName" backup "$location" --password-file /opt/backup/.resticpwd
+    restic backup "$location"
     checkResticError "$?"
 }
 
 resticCleanup() {
     printInfo "Restic Cleanup of <$folderName>"
-    restic -r rclone:pcloud:"$PCLOUDLOCATION""$folderName" forget --keep-daily 7 --keep-weekly 5 --keep-monthly 12 --keep-yearly 75 --prune --password-file /opt/backup/.resticpwd
+    restic forget --keep-daily 7 --keep-weekly 5 --keep-monthly 12 --keep-yearly 75 --prune
     checkResticError "$?"
 }
 
@@ -116,15 +122,6 @@ printAllImageVersions() {
     for Docker in $(docker ps --format '{{.Names}}'); do
         getImageVersion "$Docker"
     done
-}
-
-directoryBackup() {
-    location="$1"
-    folderName="$(echo $location | rev | cut -d'/' -f2 | rev)"
-    printImportant "Backing up <$location>"
-    resticCopy
-    # only continue each step if the previous step has not caused an error
-    [ "$_returnVar" != "error" ] && resticCleanup
 }
 
 stopDockerCompose() {
@@ -163,17 +160,34 @@ chooseSubsequentAction() {
     fi
 }
 
+initScriptEnv() {
+    location="$1"
+    folderName="$(echo $location | rev | cut -d'/' -f2 | rev)"
+    printImportant "Backing up <$location>"
+    RESTIC_REPOSITORY="rclone:pcloud/Backups/$folderName"
+}
+
+directoryBackup() {
+    initScriptEnv "$1"
+    resticCopy
+    # only continue each step if the previous step has not caused an error
+    [ "$_returnVar" != "error" ] && resticCleanup
+    resetReturnVar
+}
+
+resetReturnVar() {
+    _returnVar=""
+}
+
 goThroughDockerDirectorys() {
     for location in $DOCKERDIR*/; do
-        folderName="$(echo $location | rev | cut -d'/' -f2 | rev)"
-        printImportant "Backing up <$location>"
+        initScriptEnv "$1"
         chooseForegoingAction
         # only continue each step if the previous step has not caused an error
         [ "$_returnVar" != "error" ] && resticCopy
         [ "$_returnVar" != "error" ] && chooseSubsequentAction
         [ "$_returnVar" != "error" ] && resticCleanup
-        # reset returnVar for next run
-        _returnVar=""
+        resetReturnVar
     done
 }
 
