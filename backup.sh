@@ -93,7 +93,7 @@ resticInit() {
 }
 
 resticCheckIfRepoExists() {
-    restic snapshots >/dev/null
+    restic snapshots >/dev/null 2>&1
     if [ "$?" -ne 0 ]; then
         resticInit
     fi
@@ -113,7 +113,7 @@ resticCleanup() {
 }
 
 resticCacheCleanup() {
-    restic cache --cleanup >/dev/null
+    restic cache --cleanup >/dev/null 2>&1
     checkNoError "$?" "restic cache cleanup"
 }
 
