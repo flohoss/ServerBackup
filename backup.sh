@@ -108,7 +108,7 @@ resticCopy() {
 
 resticCleanup() {
     printInfo "Restic Cleanup of <$folderName>"
-    restic forget --keep-within-daily 7d --keep-within-weekly 1m --keep-within-monthly 1y --keep-within-yearly 75y
+    restic forget --keep-within-daily 7d --keep-within-weekly 1m --keep-within-monthly 1y --keep-within-yearly 75y prune
     checkResticError "$?"
 }
 
