@@ -26,6 +26,7 @@ checkAllEnvironmentVariables() {
     [ "$DOCKERDIR" == "" ] && envError=true
     [ "$BACKUPDIR" == "" ] && envError=true
     [ "$PCLOUDLOCATION" == "" ] && envError=true
+    [ "$RESTIC_PASSWORD_FILE" == "" ] && envError=true
     if [ "$envError" = true ]; then
         printError "Some environmet variables are not set"
         exit 1
@@ -100,7 +101,7 @@ resticCopy() {
 
 resticCleanup() {
     printInfo "Restic Cleanup of <$folderName>"
-    restic forget --keep-daily 7 --keep-weekly 5 --keep-monthly 12 --keep-yearly 75 --prune
+    restic forget --keep-within-daily 7d --keep-within-weekly 1m --keep-within-monthly 1y --keep-within-yearly 75y
     checkResticError "$?"
 }
 
