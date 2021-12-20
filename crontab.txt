@@ -1,2 +1,2 @@
-0 2 * * * /opt/backup/prepareBackup.sh > /dev/null 2>&1
+0 2 * * * /opt/backup/prepareBackup.sh >> /opt/backup/logs/$(date +\%Y)/$(date +\%m)/$(date +\%Y-\%m-\%d).txt 2>&1
 0 3 * * * /opt/backup/backup.sh >> /opt/backup/logs/$(date +\%Y)/$(date +\%m)/$(date +\%Y-\%m-\%d).txt 2>&1

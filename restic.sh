@@ -9,7 +9,7 @@ printError() {
 }
 
 printInfo() {
-    printHelper "🟠" "INFO" "$1"
+    printHelper "🔵" "INFO" "$1"
 }
 
 printSuccess() {
@@ -17,7 +17,7 @@ printSuccess() {
 }
 
 printImportant() {
-    printHelper "🔔" "IMPORTANT" "$1"
+    printHelper "🔶" "IMPORTANT" "$1"
 }
 
 checkAllEnvironmentVariables() {
