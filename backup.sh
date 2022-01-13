@@ -87,6 +87,7 @@ resticInit() {
     printInfo "Preparing a new repository of <$folderName>"
     restic init
     checkNoError "$?" "restic prepare"
+    sleep 5
 }
 
 resticCheckIfRepoExists() {
