@@ -202,7 +202,7 @@ goThroughDockerDirectorys() {
 _returnVar=""
 
 # Specify what docker should be stopped before backing them up, seperate with space
-dockerToStop="gitea hedgedoc sharelatex vaultwarden media"
+dockerToStop="gitea hedgedoc sharelatex vaultwarden media firefly"
 
 # Start of the sequence
 checkSudoRights
