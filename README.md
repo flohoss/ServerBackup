@@ -5,13 +5,9 @@
 
 # Backup-script to run in linux with restic, rclone and pcloud
 
-Make sure to install docker compose V2 globally if you are running the script as root:
+Make sure to install **docker compose V2 globally** if you are running the script as root:
 
-```bash
-mkdir -p /usr/local/lib/docker/cli-plugins
-curl -SL https://github.com/docker/compose/releases/download/v2.0.1/docker-compose-linux-x86_64 -o /usr/local/lib/docker/cli-plugins/docker-compose
-chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
-```
+[https://docs.docker.com/compose/cli-command/](https://docs.docker.com/compose/cli-command/)
 
 A working rclone config file is needed. Feel free to change the backup function to your favoured backup command.
 
