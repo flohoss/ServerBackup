@@ -78,6 +78,7 @@ case $action in
 "rebuild")
     printImportant "Rebuild restic indexes"
     restic -r rclone:pcloud:"$PCLOUDLOCATION""$repo" rebuild-index
+    ;;
 *)
     printImportant "HOW-TO"
     printf "snapshots 	[repo]\n"
