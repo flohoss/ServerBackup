@@ -75,6 +75,9 @@ case $action in
     restic -r rclone:pcloud:"$PCLOUDLOCATION""$repo" restore "$option" --target /tmp/
     checkNoError "$?" "Restore restic repository"
     ;;
+"rebuild")
+    printImportant "Rebuild restic indexes"
+    restic -r rclone:pcloud:"$PCLOUDLOCATION""$repo" rebuild-index
 *)
     printImportant "HOW-TO"
     printf "snapshots 	[repo]\n"
