@@ -44,6 +44,5 @@ printImportant() {
     do
         printf " ✨ 📂"
     done
-    printf 
     printHelper "🔶" "IMPORTANT" "$1"
 }
