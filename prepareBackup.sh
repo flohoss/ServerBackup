@@ -3,21 +3,21 @@
 source "helpers.sh"
 
 pullGithubRepo() {
-    printInfo $1
+    printInfo "$1"
     cd /opt/backup/ && git pull --no-rebase
-    checkNoError "$?" $1
+    checkNoError "$?" "$1"
 }
 
 setCrontab() {
-    printInfo $1
+    printInfo "$1"
     crontab /opt/backup/crontab.txt
-    checkNoError "$?" $1
+    checkNoError "$?" "$1"
 }
 
 setEnvironment() {
-    printInfo $1
+    printInfo "$1"
     cd /opt/backup/ && cat .environment > /etc/environment
-    checkNoError "$?" $1
+    checkNoError "$?" "$1"
 }
 
 checkSudoRights

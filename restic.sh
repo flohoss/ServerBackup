@@ -35,7 +35,7 @@ case $action in
 "keep-last")
     printInfo "Remove all, keep last restic shapshot"
     restic -r rclone:pcloud:"$PCLOUDLOCATION""$repo" forget --keep-last "$option" --prune
-    checkNoError "$?" "Remove all, keep last"
+    checkNoError "$?" "Remove all, keep last restic shapshot"
     ;;
 "init")
     printInfo "Init restic repository"
@@ -50,6 +50,7 @@ case $action in
 "rebuild")
     printInfo "Rebuild restic indexes"
     restic -r rclone:pcloud:"$PCLOUDLOCATION""$repo" rebuild-index
+    checkNoError "$?" "Rebuild restic indexes"
     ;;
 *)
     printInfo "HOW-TO"

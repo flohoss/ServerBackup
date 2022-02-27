@@ -30,24 +30,24 @@ backupLogs() {
 
 backupMediaFolderIfExternalExisting() {
     if [ "$EXTERNALMEDIAFOLDER" != "" ] && [ "$LOCALMEDIAFOLDER" != "" ]; then
-        printImportant $1
+        printImportant "$1"
         rclone sync "$LOCALMEDIAFOLDER" "$EXTERNALMEDIAFOLDER"
-        checkNoError "$?" $1
+        checkNoError "$?" "$1"
     else
         printInfo "No media folder backup executed"
     fi
 }
 
 healthStart() {
-    printInfo $1
+    printInfo "$1"
     curl -sS -o /dev/null "$PINGURL"/start
-    checkNoError "$?" $1
+    checkNoError "$?" "$1"
 }
 
 healthFinish() {
-    printInfo $1
+    printInfo "$1"
     curl -sS -o /dev/null "$PINGURL"
-    checkNoError "$?" $1
+    checkNoError "$?" "$1"
 }
 
 resticInit() {
