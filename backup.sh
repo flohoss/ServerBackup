@@ -164,7 +164,7 @@ goThroughDockerDirectorys() {
 # Specify what docker should be stopped before backing them up, seperate with space
 dockerToStop="gitea hedgedoc sharelatex vaultwarden media firefly"
 
-# Start of the sequence
+printImportant "backup.sh"
 checkSudoRights
 checkAllEnvironmentVariables
 healthStart "Sending START curl"

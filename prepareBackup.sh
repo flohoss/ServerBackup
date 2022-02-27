@@ -20,8 +20,8 @@ setEnvironment() {
     checkNoError "$?" "$1"
 }
 
+printImportant "prepareBackup.sh"
 checkSudoRights
-
 pullGithubRepo "Pull current github repository"
 setCrontab "Set crontab to crontab.txt"
 setEnvironment "Set all environment variables"
