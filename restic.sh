@@ -14,6 +14,10 @@ checkAllEnvironmentVariables() {
     fi
 }
 
+printOption() {
+    printf "\n✨ %s:\n %-15s %-15s %-15s\n" "$1" "$2" "$3" "$4"
+}
+
 action=$1
 repo=$2
 option=$3
@@ -54,12 +58,12 @@ case $action in
     ;;
 *)
     printInfo "HOW-TO"
-    printf "\n✨ Show snapshots:\n   snapshots   [repo]\n"
-    printf "\n✨ Remove Snapshot:\n    remove      [repo]      [snapshot-id]\n"
-    printf "\n✨ Remove snapshots and keep amount:\n    keep-last   [repo]     [amount]\n"
-    printf "\n✨ Init repo:\n    init        [repo]\n"
-    printf "\n✨ Restore snapshot:\n    restore     [repo]     [latest/snapshot-id]\n"
-    printf "\n✨ Rebuild repo:\n    rebuild     [repo]\n\n"
+    printOption "Show snapshots" "snapshots" "[repo]" ""
+    printOption "Remove Snapshot" "remove" "[repo]" "[snapshot-id]"
+    printOption "Remove snapshots and keep amount" "keep-last" "[repo]" "[amount]"
+    printOption "Init repo" "init" "[repo]" ""
+    printOption "Restore snapshot" "restore" "[repo]" "[latest/snapshot-id]"
+    printOption "Rebuild repo" "rebuild" "[repo]" ""
     exit 1
     ;;
 esac
