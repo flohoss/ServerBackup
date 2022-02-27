@@ -55,17 +55,17 @@ case $action in
 *)
     printInfo "HOW-TO"
     printf "Show snapshots:\n"
-    printf "    snapshots 	    [repo]\n\n"
+    printf "    snapshots   [repo]\n\n"
     printf "Remove Snapshot:\n"
-    printf "    remove 		    [repo] 		[snapshot-id]\n\n"
+    printf "    remove      [repo] 		[snapshot-id]\n\n"
     printf "Remove snapshots and keep amount:\n"
-    printf "    keep-last 	    [repo] 		[amount]\n\n"
+    printf "    keep-last   [repo] 		[amount]\n\n"
     printf "Init repo:\n"
-    printf "    init 		    [repo]\n\n"
+    printf "    init        [repo]\n\n"
     printf "Restore snapshot:\n"
-    printf "    restore 	    [repo] 		[latest/snapshot-id]\n\n"
+    printf "    restore     [repo] 		[latest/snapshot-id]\n\n"
     printf "Rebuild repo:\n"
-    printf "    rebuild 	    [repo]\n\n"
+    printf "    rebuild     [repo]\n\n"
     exit 1
     ;;
 esac
