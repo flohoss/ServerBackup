@@ -29,11 +29,12 @@ backupLogs() {
 }
 
 backupMediaFolderIfExternalExisting() {
-    if [[ -d "$EXTERNALMEDIAFOLDER" ]]
-    then
+    if [ "$EXTERNALMEDIAFOLDER" != "" ] && [ "$LOCALMEDIAFOLDER" != "" ]; then
         printImportant $1
         rclone sync "$LOCALMEDIAFOLDER" "$EXTERNALMEDIAFOLDER"
         checkNoError "$?" $1
+    else
+        printInfo "No media folder backup executed"
     fi
 }
 
