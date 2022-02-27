@@ -39,5 +39,10 @@ printSuccess() {
 }
 
 printImportant() {
-    printHelper "\n\n🔶" "IMPORTANT" "$1"
+    printf "\n\n"
+    for i in {0..10}
+    do
+        printf "🔶"
+    done
+    printHelper "🔶" "IMPORTANT" "$1"
 }
