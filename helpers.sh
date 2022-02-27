@@ -40,9 +40,9 @@ printSuccess() {
 
 printImportant() {
     printf "\n\n"
-    for i in {0..10}
+    for i in {0..20}
     do
-        printf "🔶"
+        printf "📂 ✨ "
     done
     printHelper "🔶" "IMPORTANT" "$1"
 }
