@@ -1,26 +1,9 @@
 #!/bin/bash
 
-printHelper() {
-    printf "\n$1 ($(date +'%F %T')) %-10s: $3\n" "$2"
-}
-
-printError() {
-    printHelper "🔴" "ERROR" "$1"
-}
-
-printInfo() {
-    printHelper "🔵" "INFO" "$1"
-}
-
-printSuccess() {
-    printHelper "🟢" "SUCCESS" "$1"
-}
-
-printImportant() {
-    printHelper "🔶" "IMPORTANT" "$1"
-}
+source "helpers.sh"
 
 checkAllEnvironmentVariables() {
+    printInfo "Checking if all environment variables are set"
     local envError=false
     [ "$PINGURL" == "" ] && envError=true
     [ "$DOCKERDIR" == "" ] && envError=true
@@ -35,10 +18,6 @@ checkAllEnvironmentVariables() {
     fi
 }
 
-checkSudoRights() {
-    [ "$EUID" -ne 0 ] && printError "This script must be run as root" && exit 1
-}
-
 backupCurrentCrontab() {
     crontab -l >"$BACKUPDIR"currentCrontabBackup.txt
     checkNoError "$?" "contab backup"
@@ -50,37 +29,24 @@ backupLogs() {
 }
 
 backupMediaFolderIfExternalExisting() {
-    externalFolder="/media/external/media/"
-    localMediaFolder="/home/flohoss/media/"
-    if [[ -d "$externalFolder" ]]
+    if [[ -d "$EXTERNALMEDIAFOLDER" ]]
     then
-        printImportant "Backup media folder"
-        rclone sync "$localMediaFolder" "$externalFolder"
-        checkNoError "$?" "Backup media folder"
+        printImportant $1
+        rclone sync "$LOCALMEDIAFOLDER" "$EXTERNALMEDIAFOLDER"
+        checkNoError "$?" $1
     fi
 }
 
 healthStart() {
-    printInfo "Sending START ping to healthchecks"
+    printInfo $1
     curl -sS -o /dev/null "$PINGURL"/start
-    checkNoError "$?" "start ping"
+    checkNoError "$?" $1
 }
 
 healthFinish() {
-    printInfo "Sending STOP ping to healthchecks"
+    printInfo $1
     curl -sS -o /dev/null "$PINGURL"
-    checkNoError "$?" "stop ping"
-}
-
-checkNoError() {
-    if [ "$1" -ne 0 ]; then
-        curl -sS --data-raw "$2" "$PINGURL"/fail
-        printError "$2"
-        _returnVar="error"
-    else
-        printSuccess "$2"
-        _returnVar="success"
-    fi
+    checkNoError "$?" $1
 }
 
 resticInit() {
@@ -182,10 +148,6 @@ directoryBackup() {
     resetReturnVar
 }
 
-resetReturnVar() {
-    _returnVar=""
-}
-
 goThroughDockerDirectorys() {
     for location in $DOCKERDIR*/; do
         initScriptEnv "$location"
@@ -198,21 +160,18 @@ goThroughDockerDirectorys() {
     done
 }
 
-# Global return variable
-_returnVar=""
-
 # Specify what docker should be stopped before backing them up, seperate with space
 dockerToStop="gitea hedgedoc sharelatex vaultwarden media firefly"
 
 # Start of the sequence
 checkSudoRights
 checkAllEnvironmentVariables
-healthStart
+healthStart "Sending START curl"
 resticCacheCleanup
 backupCurrentCrontab
 printAllImageVersions
 goThroughDockerDirectorys
 directoryBackup "/opt/backup/"
-backupMediaFolderIfExternalExisting
-healthFinish
+backupMediaFolderIfExternalExisting "Backup media folder"
+healthFinish "Sending STOP curl"
 backupLogs
