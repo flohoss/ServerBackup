@@ -15,7 +15,7 @@ checkAllEnvironmentVariables() {
 }
 
 printOption() {
-    printf "\n✨ %s:\n %-15s %-15s %-15s\n" "$1" "$2" "$3" "$4"
+    printf "\n✨ %s:\n%-10s%-10s%-10s\n" "$1" "$2" "$3" "$4"
 }
 
 action=$1
