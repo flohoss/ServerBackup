@@ -23,7 +23,7 @@ checkNoError() {
 }
 
 printHelper() {
-    printf "\n$1 ($(date +'%F %T')) %-10s: $3\n" "$2"
+    printf "\n$1 ($(date +'%F %T')) %-10s: $3\n\n" "$2"
 }
 
 printError() {
