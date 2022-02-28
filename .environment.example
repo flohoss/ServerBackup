@@ -3,7 +3,6 @@ DOCKERDIR="/opt/docker/"
 BACKUPDIR="/opt/backup/"
 PCLOUDLOCATION="Backups/bmw/"
 RESTIC_PASSWORD_FILE="/opt/backup/.resticpwd"
-HELPER_LOCATION="/opt/backup/helpers.sh"
 
 EXTERNALMEDIAFOLDER="/media/external/media/"
 LOCALMEDIAFOLDER="/home/flohoss/media/"

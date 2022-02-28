@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "$HELPER_LOCATION"
+cd "$BACKUPDIR" && source "helpers.sh"
 
 pullGithubRepo() {
     printInfo "$1"
