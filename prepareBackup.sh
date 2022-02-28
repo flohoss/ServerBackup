@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "helpers.sh"
+source "$HELPER_LOCATION"
 
 pullGithubRepo() {
     printInfo "$1"

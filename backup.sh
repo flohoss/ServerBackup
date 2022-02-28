@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "helpers.sh"
+source "$HELPER_LOCATION"
 
 checkAllEnvironmentVariables() {
     printInfo "Checking if all environment variables are set"
