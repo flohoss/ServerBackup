@@ -162,7 +162,7 @@ goThroughDockerDirectorys() {
 }
 
 # Specify what docker should be stopped before backing them up, seperate with space
-dockerToStop="vaultwarden media firefly"
+dockerToStop="vaultwarden firefly"
 
 printImportant "backup.sh"
 checkSudoRights
