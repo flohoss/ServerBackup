@@ -56,6 +56,11 @@ case $action in
     restic -r rclone:pcloud:"$PCLOUDLOCATION""$repo" rebuild-index
     checkNoError "$?" "Rebuild restic indexes"
     ;;
+"unlock")
+    printInfo "Unlocking restic repository"
+    restic -r rclone:pcloud:"$PCLOUDLOCATION""$repo" unlock
+    checkNoError "$?" "Unlocking restic repository"
+    ;;
 *)
     printInfo "HOW-TO"
     printOption "Show snapshots" "snapshots" "[repo]" ""
