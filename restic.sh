@@ -69,6 +69,7 @@ case $action in
     printOption "Init repo" "init" "[repo]" ""
     printOption "Restore snapshot" "restore" "[repo]" "[latest/snapshot-id]"
     printOption "Rebuild repo" "rebuild" "[repo]" ""
+    printOption "Unlock repo" "unlock" "[repo]" ""
     exit 1
     ;;
 esac
