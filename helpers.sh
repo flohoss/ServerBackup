@@ -40,7 +40,7 @@ printSuccess() {
 
 printImportant() {
     printf "\n"
-    for i in {0..20}
+    for i in {0..40}
     do
         printf "#"
     done

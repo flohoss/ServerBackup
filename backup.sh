@@ -30,24 +30,21 @@ backupLogs() {
 
 backupMediaFolderIfExternalExisting() {
     if [ "$EXTERNALMEDIAFOLDER" != "" ] && [ "$LOCALMEDIAFOLDER" != "" ]; then
-        printImportant "$1"
         rclone sync "$LOCALMEDIAFOLDER" "$EXTERNALMEDIAFOLDER"
-        checkNoError "$?" "$1"
+        checkNoError "$?" "Backup media folder"
     else
-        printInfo "No media folder backup executed"
+        printInfo "No media folder specified"
     fi
 }
 
 healthStart() {
-    printInfo "$1"
     curl -sS -o /dev/null "$PINGURL"/start
-    checkNoError "$?" "$1"
+    checkNoError "$?" "Sending START curl"
 }
 
 healthFinish() {
-    printInfo "$1"
     curl -sS -o /dev/null "$PINGURL"
-    checkNoError "$?" "$1"
+    checkNoError "$?" "Sending STOP curl"
 }
 
 resticInit() {
@@ -167,12 +164,12 @@ dockerToStop="vaultwarden firefly"
 printImportant "backup.sh"
 checkSudoRights
 checkAllEnvironmentVariables
-healthStart "Sending START curl"
+healthStart
 resticCacheCleanup
 backupCurrentCrontab
 printAllImageVersions
 goThroughDockerDirectorys
 directoryBackup "/opt/backup/"
-backupMediaFolderIfExternalExisting "Backup media folder"
-healthFinish "Sending STOP curl"
+backupMediaFolderIfExternalExisting
+healthFinish
 backupLogs
