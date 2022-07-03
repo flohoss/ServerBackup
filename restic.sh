@@ -3,7 +3,6 @@
 cd "$BACKUPDIR" && source "helpers.sh"
 
 checkAllEnvironmentVariables() {
-    printInfo "Checking if all environment variables are set"
     local envError=false
     [ "$PCLOUDLOCATION" == "" ] && envError=true
     if [ "$envError" = true ]; then
