@@ -17,6 +17,7 @@ setEnvironment() {
     checkNoError "$?" "Set all environment variables"
 }
 
+export $PATH=$PATH:/usr/bin/rclone
 printImportant "prepareBackup.sh"
 checkSudoRights
 pullGithubRepo
