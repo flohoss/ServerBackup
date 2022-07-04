@@ -19,7 +19,7 @@ checkAllEnvironmentVariables() {
 
 backupCurrentCrontab() {
     crontab -l >"$BACKUPDIR"currentCrontabBackup.txt
-    checkNoError "$?" "contab backup"
+    checkNoError "$?" "contab backup $folderName"
 }
 
 backupLogs() {
@@ -49,7 +49,7 @@ healthFinish() {
 resticInit() {
     printInfo "Preparing a new repository of <$folderName>"
     restic init
-    checkNoError "$?" "restic prepare"
+    checkNoError "$?" "restic prepare $folderName"
     sleep 5
 }
 
@@ -64,13 +64,13 @@ resticCopy() {
     resticCheckIfRepoExists
     printInfo "Restic Backup of <$folderName>"
     restic backup "$location"
-    checkNoError "$?" "restic backup"
+    checkNoError "$?" "restic backup $folderName"
 }
 
 resticCleanup() {
     printInfo "Restic Cleanup of <$folderName>"
     restic forget --keep-within-daily 7d --keep-within-weekly 1m --keep-within-monthly 1y --keep-within-yearly 75y --prune
-    checkNoError "$?" "restic cleanup"
+    checkNoError "$?" "restic cleanup $folderName"
 }
 
 resticCacheCleanup() {
