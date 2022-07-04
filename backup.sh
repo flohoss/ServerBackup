@@ -160,7 +160,7 @@ goThroughDockerDirectorys() {
 # Specify what docker should be stopped before backing them up, seperate with space
 dockerToStop="vaultwarden firefly"
 
-printInfo $PATH
+export PATH=$PATH:/usr/bin/rclone
 
 printImportant "backup.sh"
 checkSudoRights
