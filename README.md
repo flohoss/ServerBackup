@@ -1,7 +1,4 @@
 ![](https://img.shields.io/badge/Basics-Shell-informational?style=for-the-badge&logo=gnubash&color=4EAA25)
-![](https://img.shields.io/badge/OS-Debian-informational?style=for-the-badge&logo=debian&color=A81D33)
-![](https://img.shields.io/badge/Tech-Docker-informational?style=for-the-badge&logo=docker&color=2496ED)
-![](https://img.shields.io/badge/Hoster-Hetzner-informational?style=for-the-badge&logo=hetzner&color=D50C2D)
 
 # Backup-script to run in linux with restic, rclone and pcloud
 
@@ -62,9 +59,9 @@ Once the script is running without errors, the crontab example can be used to ru
 ```prepareBackup.sh``` will copy ```.environment``` in ```/etc/environment```
 
 ```bash
-PINGURL="https://health.fhoss.de/ping/<health_check_ping_id>"
+PINGURL="https://health.example.de/ping/<health_check_ping_id>"
 DOCKERDIR="/opt/docker/"
 BACKUPDIR="/opt/backup/"
-PCLOUDLOCATION="Backups/bmw/"
+PCLOUDLOCATION="Backups/server1/"
 RESTIC_PASSWORD_FILE="/opt/backup/.resticpwd"
 ```
