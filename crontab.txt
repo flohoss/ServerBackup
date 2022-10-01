@@ -1,5 +1,8 @@
 CRON_TZ=Europe/Berlin
 
-50 2 * * * cd /opt/backup/ && mkdir /opt/backup/logs/$(date +\%Y)/$(date +\%m)/ -p >/dev/null 2>&1
-52 2 * * * /opt/backup/prepareBackup.sh > /opt/backup/logs/$(date +\%Y)/$(date +\%m)/$(date +\%Y-\%m-\%d).txt 2>&1
-0 3 * * * /opt/backup/backup.sh >> /opt/backup/logs/$(date +\%Y)/$(date +\%m)/$(date +\%Y-\%m-\%d).txt 2>&1
+# logging to folders
+# 50 2 * * * cd /opt/backup/ && mkdir /opt/backup/logs/$(date +\%Y)/$(date +\%m)/ -p >/dev/null 2>&1
+# logging to single file
+56 2 * * * rm /opt/backup/logs/* -r >/dev/null 2>&1
+58 2 * * * /opt/backup/prepareBackup.sh > /opt/backup/logs/$(date +\%Y-\%m-\%d).txt 2>&1
+0 3 * * * /opt/backup/backup.sh >> /opt/backup/logs/$(date +\%Y-\%m-\%d).txt 2>&1
