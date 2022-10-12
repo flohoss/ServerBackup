@@ -19,7 +19,7 @@ checkAllEnvironmentVariables() {
 
 backupCurrentCrontab() {
     crontab -l >"$BACKUPDIR"currentCrontabBackup.txt
-    checkNoError "$?" "contab backup $folderName"
+    checkNoError "$?" "crontab backup"
 }
 
 backupLogs() {

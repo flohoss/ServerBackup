@@ -60,6 +60,13 @@ case $action in
     restic -r rclone:pcloud:"$PCLOUDLOCATION""$repo" unlock
     checkNoError "$?" "Unlocking restic repository"
     ;;
+"upgrade")
+    printInfo "Upgrading restic repository"
+    restic -r rclone:pcloud:"$PCLOUDLOCATION""$repo" migrate upgrade_repo_v2
+    checkNoError "$?" "Upgrading restic repository"
+    restic -r rclone:pcloud:"$PCLOUDLOCATION""$repo" prune
+    checkNoError "$?" "Pruning restic repository"
+    ;;
 *)
     printInfo "HOW-TO"
     printOption "Show snapshots" "snapshots" "[repo]" ""

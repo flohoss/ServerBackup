@@ -9,7 +9,7 @@ pullGithubRepo() {
 
 setCrontab() {
     crontab /opt/backup/crontab.txt
-    checkNoError "$?" "Set crontab to crontab.txt"
+    checkNoError "$?" "Save crontab to crontab.txt"
 }
 
 setEnvironment() {
