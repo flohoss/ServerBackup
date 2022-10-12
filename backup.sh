@@ -53,7 +53,6 @@ backupTeleportIfExisting() {
         location="/etc/teleport.yaml"
         folderName="teleport"
         printImportant "Backing up <$location>"
-        export RESTIC_REPOSITORY="rclone:pcloud:$PCLOUDLOCATION$location"
         resticCopy
         checkNoError "$?" "Backup teleport config"
     else
