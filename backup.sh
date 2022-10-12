@@ -36,6 +36,31 @@ backupMediaFolderIfExternalExisting() {
     fi
 }
 
+backupTeleportIfExisting() {
+    TELEPORT_CONFIG=/etc/teleport.yaml
+    TELEPORT_DIR=/var/lib/teleport/
+
+    if [ -d "$TELEPORT_DIR" ]; then
+        initScriptEnv "$TELEPORT_DIR"
+        resticCopy
+        checkNoError "$?" "Backup teleport folder"
+    else
+        printInfo "No teleport folder found"
+        return 1
+    fi
+
+    if [ -f "$TELEPORT_CONFIG" ]; then
+        location="/etc/teleport.yaml"
+        folderName="teleport"
+        printImportant "Backing up <$location>"
+        export RESTIC_REPOSITORY="rclone:pcloud:$PCLOUDLOCATION$location"
+        resticCopy
+        checkNoError "$?" "Backup teleport config"
+    else
+        printInfo "No teleport config found"
+    fi
+}
+
 healthStart() {
     curl -sS -o /dev/null "$PINGURL"/start
     checkNoError "$?" "Sending START curl"
@@ -171,6 +196,7 @@ backupCurrentCrontab
 printAllImageVersions
 goThroughDockerDirectorys
 directoryBackup "/opt/backup/"
+backupTeleportIfExisting
 backupMediaFolderIfExternalExisting
 healthFinish
 backupLogs
