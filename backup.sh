@@ -41,7 +41,7 @@ backupTeleportIfExisting() {
     TELEPORT_DIR=/var/lib/teleport/
 
     if [ -d "$TELEPORT_DIR" ]; then
-        directoryBackup "$TEELPORT_DIR"
+        directoryBackup "$TELEPORT_DIR"
         if [ -f "$TELEPORT_CONFIG" ]; then
             fileBackup "$TELEPORT_CONFIG"
         else
@@ -148,7 +148,7 @@ chooseSubsequentAction() {
 
 initFileScriptEnv() {
     location="$1"
-    folderName="$(echo $location | rev | cut -d'.' -f2 | rev)"
+    folderName="$(echo $location | rev | cut -d'/' -f1 | rev | cut -d'.' -f1)"
     printImportant "Backing up <$location>"
     export RESTIC_REPOSITORY="rclone:pcloud:$PCLOUDLOCATION$folderName"
 }
