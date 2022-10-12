@@ -41,22 +41,14 @@ backupTeleportIfExisting() {
     TELEPORT_DIR=/var/lib/teleport/
 
     if [ -d "$TELEPORT_DIR" ]; then
-        initScriptEnv "$TELEPORT_DIR"
-        resticCopy
-        checkNoError "$?" "Backup teleport folder"
+        directoryBackup "$TEELPORT_DIR"
+        if [ -f "$TELEPORT_CONFIG" ]; then
+            fileBackup "$TELEPORT_CONFIG"
+        else
+            printInfo "No teleport config found"
+        fi
     else
         printInfo "No teleport folder found"
-        return 1
-    fi
-
-    if [ -f "$TELEPORT_CONFIG" ]; then
-        location="/etc/teleport.yaml"
-        folderName="teleport"
-        printImportant "Backing up <$location>"
-        resticCopy
-        checkNoError "$?" "Backup teleport config"
-    else
-        printInfo "No teleport config found"
     fi
 }
 
@@ -154,7 +146,22 @@ chooseSubsequentAction() {
     fi
 }
 
-initScriptEnv() {
+initFileScriptEnv() {
+    location="$1"
+    folderName="$(echo $location | rev | cut -d'.' -f2 | rev)"
+    printImportant "Backing up <$location>"
+    export RESTIC_REPOSITORY="rclone:pcloud:$PCLOUDLOCATION$folderName"
+}
+
+fileBackup() {
+    initFileScriptEnv "$1"
+    resticCopy
+    # only continue each step if the previous step has not caused an error
+    [ "$_returnVar" != "error" ] && resticCleanup
+    resetReturnVar
+}
+
+initFolderScriptEnv() {
     location="$1"
     folderName="$(echo $location | rev | cut -d'/' -f2 | rev)"
     printImportant "Backing up <$location>"
@@ -162,7 +169,7 @@ initScriptEnv() {
 }
 
 directoryBackup() {
-    initScriptEnv "$1"
+    initFolderScriptEnv "$1"
     resticCopy
     # only continue each step if the previous step has not caused an error
     [ "$_returnVar" != "error" ] && resticCleanup
@@ -171,7 +178,7 @@ directoryBackup() {
 
 goThroughDockerDirectorys() {
     for location in $DOCKERDIR*/; do
-        initScriptEnv "$location"
+        initFolderScriptEnv "$location"
         chooseForegoingAction
         # only continue each step if the previous step has not caused an error
         [ "$_returnVar" != "error" ] && resticCopy
