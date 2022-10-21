@@ -67,6 +67,11 @@ case $action in
     restic -r rclone:pcloud:"$PCLOUDLOCATION""$repo" prune
     checkNoError "$?" "Pruning restic repository"
     ;;
+"check")
+    printInfo "Checking restic repository"
+    restic -r rclone:pcloud:"$PCLOUDLOCATION""$repo" check
+    checkNoError "$?" "Checking restic repository"
+    ;;
 *)
     printInfo "HOW-TO"
     printOption "Show snapshots" "snapshots" "[repo]" ""
@@ -76,6 +81,8 @@ case $action in
     printOption "Restore snapshot" "restore" "[repo]" "[latest/snapshot-id]"
     printOption "Rebuild repo" "rebuild" "[repo]" ""
     printOption "Unlock repo" "unlock" "[repo]" ""
+    printOption "Upgrade repo" "upgrade" "[repo]" ""
+    printOption "Check repo" "check" "[repo]" ""
     exit 1
     ;;
 esac
