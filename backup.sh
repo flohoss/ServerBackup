@@ -189,7 +189,7 @@ goThroughDockerDirectorys() {
 }
 
 # Specify what docker should be stopped before backing them up, seperate with space
-dockerToStop="vaultwarden firefly gitea hedgedoc"
+dockerToStop="vaultwarden firefly gitea hedgedoc homeassistant"
 
 export PATH=$PATH:/usr/bin/rclone
 
