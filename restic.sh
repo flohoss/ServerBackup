@@ -72,6 +72,16 @@ case $action in
     restic -r rclone:pcloud:"$PCLOUDLOCATION""$repo" check
     checkNoError "$?" "Checking restic repository"
     ;;
+"passwd")
+    printInfo "Changing restic repository key"
+    restic -r rclone:pcloud:"$PCLOUDLOCATION""$repo" key passwd
+    checkNoError "$?" "Checking restic repository"
+    ;;
+"keys")
+    printInfo "List restic repository keys"
+    restic -r rclone:pcloud:"$PCLOUDLOCATION""$repo" key list
+    checkNoError "$?" "Checking restic repository"
+    ;;
 *)
     printInfo "HOW-TO"
     printOption "Show snapshots" "snapshots" "[repo]" ""
@@ -83,6 +93,8 @@ case $action in
     printOption "Unlock repo" "unlock" "[repo]" ""
     printOption "Upgrade repo" "upgrade" "[repo]" ""
     printOption "Check repo" "check" "[repo]" ""
+    printOption "Change key" "passwd" "[repo]" ""
+    printOption "List keys" "keys" "[repo]" ""
     exit 1
     ;;
 esac
